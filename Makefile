@@ -6,14 +6,15 @@
 #    By: tanukool <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/09/08 13:31:51 by tanukool          #+#    #+#              #
-#    Updated: 2022/09/10 01:31:54 by tanukool         ###   ########.fr        #
+#    Updated: 2022/09/10 12:53:16 by tanukool         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = cc
-CFLAGS = -Wall -Werror -Wextra -L$(MLX_DIR) -lmlx -framework OpenGL -framework Appkit
+CFLAGS = -Wall -Werror -Wextra
+LIB_CFLAGS =  -L$(MLX_DIR) -lmlx -framework OpenGL -framework Appkit -L$(LIBFT_DIR) -lft
 
-SRC = main.c parse_file.c
+SRC = main.c parse_file.c display_grid_loop.c draw_line.c
 OBJ = $(SRC:.c=.o)
 
 HDR = fdf.h
@@ -29,13 +30,16 @@ NAME = fdf
 all: $(NAME)
 
 $(NAME): $(OBJ) $(MLX) $(LIBFT)
-	$(CC) $(CFLAGS)
+	$(CC) $(CFLAGS) $(LIB_CFLAGS) $(OBJ) -o $@
 
 $(MLX):
 	make -C $(MLX_DIR)
 
 $(LIBFT):
 	make -C $(LIBFT_DIR)
+
+debug: $(SRC) $(MLX) $(LIBFT)
+	$(CC) -g $(CFLAGS) $(LIB_CFLAGS) $(SRC) -o $@
 
 norm:
 	norminette $(SRC) $(HDR)
@@ -50,4 +54,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re debug

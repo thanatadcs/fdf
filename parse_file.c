@@ -6,7 +6,7 @@
 /*   By: tanukool <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/08 15:34:59 by tanukool          #+#    #+#             */
-/*   Updated: 2022/09/10 01:11:50 by tanukool         ###   ########.fr       */
+/*   Updated: 2022/09/11 02:17:26 by tanukool         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,7 @@
 #include "fdf.h"
 
 void	free_grid(t_grid grid)
-{
-	t_vec_lst	*cur_vec;
+{ t_vec_lst	*cur_vec;
 	t_vec_lst	*to_free;
 
 	cur_vec = grid.head;
@@ -26,7 +25,7 @@ void	free_grid(t_grid grid)
 	{
 		to_free = cur_vec;
 		cur_vec = cur_vec->next;
-		free(cur_vec);
+		free(to_free);
 	}
 }
 
@@ -50,8 +49,8 @@ void	append_grid(t_grid *grid_ptr, char *line)
 		new_vec = malloc(sizeof(t_vec_lst));
 		if (new_vec == 0)
 			handle_error(*grid_ptr, "Error while trying to malloc\n");
-		*new_vec = (t_vec_lst){{n_col, grid_ptr->n_row, \
-		ft_atoi(*splited_line++), 1}, (n_col == grid_ptr->n_col - 1), 0};
+		*new_vec = (t_vec_lst){{n_col++ * 10 - C_W / 2, C_H / 2 - grid_ptr->n_row * 10, \
+		ft_atoi(*splited_line), 1}, (splited_line[1] == 0 || *splited_line[1] == '\n'), 0};
 		if (grid_ptr->head == 0)
 			*grid_ptr = (t_grid){.head = new_vec, .back = new_vec};
 		else
@@ -59,6 +58,7 @@ void	append_grid(t_grid *grid_ptr, char *line)
 			grid_ptr->back->next = new_vec;
 			grid_ptr->back = new_vec;
 		}
+		splited_line++;
 		n_col++;
 	}
 	if (grid_ptr->n_col != 0 && grid_ptr->n_col != n_col)
@@ -66,11 +66,27 @@ void	append_grid(t_grid *grid_ptr, char *line)
 	grid_ptr->n_col = n_col;
 }
 
+void	transform_coordinate(t_grid grid)
+{
+	t_vec_lst	*cur_vec;
+	double		factor;
+
+	cur_vec = grid.head;
+	factor = C_W / grid.n_col;
+	printf("%f\n", factor);
+	(void) factor;
+	while (cur_vec)
+	{
+		cur_vec->v.x = cur_vec->v.x * factor;
+		cur_vec->v.y = cur_vec->v.y * factor;
+		cur_vec = cur_vec->next;
+	}
+}
+
 t_grid	parse_file(char *path)
 {
 	int		fd;
 	char	*line;
-	char	**cols;
 	t_grid	to_return;
 
 	fd = open(path, O_RDONLY);
@@ -87,5 +103,6 @@ t_grid	parse_file(char *path)
 		line = get_next_line(fd);
 		to_return.n_row++;
 	}
+//	transform_coordinate(to_return);
 	return (to_return);
 }
