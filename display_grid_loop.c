@@ -6,13 +6,14 @@
 /*   By: tanukool <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 02:07:00 by tanukool          #+#    #+#             */
-/*   Updated: 2022/09/11 02:28:08 by tanukool         ###   ########.fr       */
+/*   Updated: 2022/09/11 20:51:55 by tanukool         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <math.h>
+
 #include "minilibx_macos/mlx.h"
 #include "fdf.h"
-#include <stdio.h>
 
 t_mlx_var	initialize(void)
 {
@@ -78,10 +79,36 @@ void	render_grid(t_grid grid)
 	}
 }
 
+void	transform_grid(t_grid grid, t_matrix m)
+{
+	t_vec_lst	*cur_vec;
+
+	cur_vec = grid.head;
+	while (cur_vec)
+	{
+		cur_vec->v = matrix_vector_multiply(m, cur_vec->v);
+		cur_vec = cur_vec->next;
+	}
+}
+
 void	display_grid_loop(t_grid grid)
 {
 	t_mlx_var	var;
+	t_matrix	t;
+	t_matrix	rx;
+	t_matrix	ry;
+	t_matrix	rz;
+	t_matrix	m;
+
 	var = initialize();
+	t = translate_matrix(-1 * grid.origin->v.x, -1 * grid.origin->v.y, 0);
+	rz = rotate_z_matrix(45 * M_PI / 180);
+	ry = rotate_y_matrix(0);
+	rx = rotate_x_matrix(-35.245 * M_PI / 180);
+	m = matrix_multiply(rz, t);
+	m = matrix_multiply(ry, m);
+	m = matrix_multiply(rx, m);
+	transform_grid(grid, m);
 	render_grid(grid);
 	mlx_loop(var.mlx);
 }

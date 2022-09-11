@@ -6,7 +6,7 @@
 #    By: tanukool <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/09/08 13:31:51 by tanukool          #+#    #+#              #
-#    Updated: 2022/09/10 12:53:16 by tanukool         ###   ########.fr        #
+#    Updated: 2022/09/11 14:18:06 by tanukool         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ CC = cc
 CFLAGS = -Wall -Werror -Wextra
 LIB_CFLAGS =  -L$(MLX_DIR) -lmlx -framework OpenGL -framework Appkit -L$(LIBFT_DIR) -lft
 
-SRC = main.c parse_file.c display_grid_loop.c draw_line.c
+SRC = main.c parse_file.c display_grid_loop.c draw_line.c matrix_ops.c matrix_transform.c
 OBJ = $(SRC:.c=.o)
 
 HDR = fdf.h
