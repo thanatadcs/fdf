@@ -6,7 +6,7 @@
 /*   By: tanukool <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/09 15:00:05 by tanukool          #+#    #+#             */
-/*   Updated: 2022/09/11 14:39:55 by tanukool         ###   ########.fr       */
+/*   Updated: 2022/09/19 23:34:25 by tanukool         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ typedef struct s_grid
 // parse_file.c
 void	append_grid(t_grid *grid_ptr, char *line);
 t_grid	parse_file(char *path);
-void	handle_error(t_grid grid, char *msg);
+void	handle_error(t_grid grid, char *line, char **splited_line, char *msg);
 void	free_grid(t_grid grid);
 
 // draw_line.c
