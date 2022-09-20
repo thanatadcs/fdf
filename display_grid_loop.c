@@ -6,7 +6,7 @@
 /*   By: tanukool <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 02:07:00 by tanukool          #+#    #+#             */
-/*   Updated: 2022/09/11 20:51:55 by tanukool         ###   ########.fr       */
+/*   Updated: 2022/09/20 22:37:48 by tanukool         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,27 @@ void	transform_grid(t_grid grid, t_matrix m)
 	}
 }
 
+int	handle_key(int key, void *param)
+{
+	double		theta;
+	t_grid		grid;
+	t_mlx_var	var;
+
+	var = initialize();
+	grid = *(t_grid *)param;
+	theta = 0;
+	if (key != 123 && key != 124)
+		return (1);
+	if (key == 123)
+		theta -= 10;
+	else if (key == 124)
+		theta += 10;
+	transform_grid(grid, rotate_y_matrix(theta * M_PI / 180));
+	mlx_clear_window(var.mlx, var.win);
+	render_grid(grid);
+	return (0);
+}
+
 void	display_grid_loop(t_grid grid)
 {
 	t_mlx_var	var;
@@ -110,5 +131,6 @@ void	display_grid_loop(t_grid grid)
 	m = matrix_multiply(rx, m);
 	transform_grid(grid, m);
 	render_grid(grid);
+	mlx_key_hook(var.win, handle_key, &grid);
 	mlx_loop(var.mlx);
 }
